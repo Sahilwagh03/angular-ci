@@ -1,0 +1,43 @@
+image: node:18
+
+stages:
+  - install
+  - test
+  - build
+
+variables:
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+  NODE_MODULES: "$CI_PROJECT_DIR/node_modules"
+
+cache:
+  paths:
+    - .npm/
+    - node_modules/
+
+# Install dependencies
+install_dependencies:
+  stage: install
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+# Run tests
+test:
+  stage: test
+  script:
+    - npm run test -- --watch=false --browsers=ChromeHeadless
+  dependencies:
+    - install_dependencies
+
+# Build application
+build:
+  stage: build
+  script:
+    - npm run build -- --configuration=production
+  artifacts:
+    paths:
+      - dist/
+  dependencies:
+    - install_dependencies
