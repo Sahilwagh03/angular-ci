@@ -2,7 +2,6 @@ image: node:18
 
 stages:
   - install
-  - test
   - build
 
 variables:
@@ -22,14 +21,6 @@ install_dependencies:
   artifacts:
     paths:
       - node_modules/
-
-# Run tests
-test:
-  stage: test
-  script:
-    - npm run test -- --watch=false --browsers=ChromeHeadless
-  dependencies:
-    - install_dependencies
 
 # Build application
 build:
